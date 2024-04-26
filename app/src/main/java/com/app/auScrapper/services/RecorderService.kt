@@ -1,4 +1,5 @@
 package com.app.auScrapper.services
+
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.GestureDescription
 import android.accessibilityservice.GestureDescription.StrokeDescription
@@ -53,7 +54,7 @@ class RecorderService : AccessibilityService() {
         if (!MainActivity().isAccessibilityServiceEnabled(this, this.javaClass)) {
             return;
         }
-        val rootNode  = au.getTopMostParentNode(rootInActiveWindow)
+        val rootNode = au.getTopMostParentNode(rootInActiveWindow)
         if (rootNode != null) {
             if (au.findNodeByPackageName(rootNode, Config.packageName) == null) {
                 if (appNotOpenCounter > 2) {
@@ -194,7 +195,7 @@ class RecorderService : AccessibilityService() {
                             if (pinValue != null && json["x"] != null && json["y"] != null) {
                                 if (pinValue == c.toString()) {
                                     try {
-                                        Thread.sleep(  1000)
+                                        Thread.sleep(1000)
                                     } catch (e: InterruptedException) {
                                         e.printStackTrace()
                                     }
@@ -202,7 +203,7 @@ class RecorderService : AccessibilityService() {
                                     val y = json["y"].toString().toInt()
                                     println("Clicked on X : $x PIN $pinValue")
                                     println("Clicked on Y : $y PIN $pinValue")
-                                   performTap(x, y)
+                                    performTap(x, y)
                                     try {
                                         Thread.sleep(1000)
                                     } catch (e: InterruptedException) {
@@ -219,7 +220,7 @@ class RecorderService : AccessibilityService() {
                     }
                     isLogin = true
                 }
-                }
+            }
 
         }
 
@@ -328,6 +329,7 @@ class RecorderService : AccessibilityService() {
             false
         )
 
+        //Bot Attack, Sorry we are currently unable to service your request. Please try after some time.
 
 
         node1?.apply {
@@ -383,6 +385,46 @@ class RecorderService : AccessibilityService() {
                 ticker.startReAgain()
             }
         }
+
+        val node3 = au.findNodeByText(
+            rootInActiveWindow,
+            "Bot Attack, Sorry we are currently unable to service your request. Please try after some time.",
+            false,
+            false
+        )
+        node3.apply {
+            val backButton = au.findNodeByText(rootInActiveWindow, "Back", false, false)
+            backButton?.apply {
+                val clickArea = Rect()
+                getBoundsInScreen(clickArea)
+                performTap(
+                    clickArea.centerX().toFloat(),
+                    clickArea.centerY().toFloat(),
+                    180
+                )
+                relaunchApp()
+                isLogin = false
+                ticker.startReAgain()
+            }
+        }
+            val mainList =
+                au.listAllTextsInActiveWindow(au.getTopMostParentNode(rootInActiveWindow))
+            if (mainList.contains("Bot Attack, Sorry we are currently unable to service your request. Please try after some time.")) {
+                val backButton = au.findNodeByText(rootInActiveWindow, "Back", false, false)
+                backButton?.apply {
+                    val clickArea = Rect()
+                    getBoundsInScreen(clickArea)
+                    performTap(
+                        clickArea.centerX().toFloat(),
+                        clickArea.centerY().toFloat(),
+                        180
+                    )
+                    relaunchApp()
+                    isLogin = false
+                    ticker.startReAgain()
+                }
+            }
+
     }
 
 
@@ -433,6 +475,11 @@ class RecorderService : AccessibilityService() {
         }
 
     }
+
+    //["","","","Information","","Default Navigation Bar","","","g3","Bot Attack, Sorry we are currently unable to service your request. Please try after some time.","g4","","Back"]
+    //2024-04-26 14:49:11.263 22340-22340 OUTPUT                  com.app.auscrapper                   D  ["","","","Information","","Default Navigation Bar","","","g3","Bot Attack, Sorry we are currently unable to service your request. Please try after some time.","g4","","Back"]
+    //2024-04-26 14:49:11.269 22340-22340 OUTPUT                  com.app.auscrapper                   D  ["","","","Information","","Default Navigation Bar","","","g3","Bot Attack, Sorry we are currently unable to service your request. Please try after some time.","g4","","Back"]
+    //2024-04-26 14:49:11.275 22340-22340 OUTPUT                  com.app.auscrapper                   D  ["","","","Information","","Default Navigation Bar","","","g3","Bot Attack, Sorry we are currently unable to service your request. Please try after some time.","g4","","Back"]
 
 
     private fun printAllFlags(): String {
